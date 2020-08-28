@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 from pip._vendor import requests
+import os
+import sys
 
 
 url = "https://food.ndtv.com/recipe-chawal-ki-kheer-951891"
@@ -17,4 +19,15 @@ recipe_method = recipe_container.find('div', {"class": "method"})
 instructions = [x.get_text().strip()
                 for x in recipe_method.find_all('li')]
 
-print(instructions)
+instructions_str = ','.join(instructions).encode()
+# print(instructions)
+
+data = [{'Title': name, 'Ingredients': ingredients, 'Instructions': instructions}]
+df = pd.DataFrame(data, columns=['Title', 'Ingredients', 'Instructions'])
+
+fd = os.open("test.txt", os.O_RDWR | os.O_CREAT)
+os.write(fd, instructions_str)
+os.close(fd)
+print("closed file")
+
+np.savetxt('df.txt', df.values, fmt='%s', delimiter=',')
