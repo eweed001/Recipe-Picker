@@ -1,17 +1,15 @@
 import os
 from bs4 import BeautifulSoup
-import pandas as pd
-import numpy as np
 import csv
 import food
+import foodnetwork
+import delish
 
 
-def write(title, time, ingredients, instructions):
+def write(title, time, ingredients, instructions, url):
     data = {'Title': title, 'Time': time,
-            'Ingredients': ingredients, 'Instructions': instructions}
-    fields = ['Title', 'Time', 'Ingredients', 'Instructions']
-    df_new = pd.DataFrame(
-        data, columns=['Title', 'Time', 'Ingredients', 'Instructions'])
+            'Ingredients': ingredients, 'Instructions': instructions, "URL": url}
+    fields = ['Title', 'Time', 'Ingredients', 'Instructions', 'URL']
 
     flag = os.path.exists("recipes.txt")
 
@@ -27,5 +25,12 @@ host = input("Website host: ")
 
 if (host == "Food"):
     obj = food.Food(url, host)
+if (host == "Foodnetwork"):
+    obj = foodnetwork.Foodnetwork(url, host)
+if (host == "Delish"):
+    obj = delish.Delish(url, host)
 
-write(obj.title(), obj.time(), obj.ingredients(), obj.instructions())
+# add error handling here
+
+write(obj.title(), obj.time(), obj.ingredients(), obj.instructions(), obj.link())
+# print(obj.instructions())
