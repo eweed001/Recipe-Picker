@@ -1,3 +1,5 @@
+# General helper functions for scraping the recipes
+
 import html
 import re
 
